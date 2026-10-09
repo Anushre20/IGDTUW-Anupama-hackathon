@@ -6,9 +6,9 @@
 
 **College / Campus:** Indira Gandhi Delhi Technical University for Women (IGDTUW), Delhi  
 
-**Demo Video Link:** [YouTube Unlisted Link]  
+**Demo Video Link:** https://youtu.be/oM2a-gU2CUo  
 
-**Slide Deck Link (if hosted externally):** https://drive.google.com/file/d/1ObpvTI2Vs60QJ_lmg12Vi_rLN0fLrzUW/view?usp=sharing
+**Slide Deck Link (within docs/ folder of this repo):** https://github.com/Anushre20/IGDTUW-Anupama-hackathon/blob/main/docs/S%26P%20Global%20%C3%97%20CRISIL%20Campus%20Hackathon'26%20Anupama.pdf
 
 ## 1. Project Overview / Problem Statement & Approach
 
