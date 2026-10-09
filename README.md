@@ -56,8 +56,8 @@ Rebalancing     Stress Testing
 **Runtime:** Python 3.11 recommended; tested locally on macOS. Deployed on Streamlit Community Cloud.
 
 ```bash
-git clone <your-repo-url>
-cd beacon-financial-risk-engine
+git clone https://github.com/Anushre20/IGDTUW-Anupama-hackathon
+cd IGDTUW-Anupama-hackathon
 
 python -m venv venv
 source venv/bin/activate
