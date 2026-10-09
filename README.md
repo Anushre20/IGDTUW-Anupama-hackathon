@@ -1,342 +1,78 @@
-# 🔦 Beacon — AI-Powered Financial Risk Intelligence Platform
+# Beacon — AI-Powered Financial Risk Intelligence Platform - S&P Global & CRISIL Campus Hackathon
 
-> **Turning unstructured financial information into actionable risk signals.**
+**Candidate Name:** Anupama
+**College Email ID:** anupama010btaiml24@igdtuw.ac.in
+**College / Campus:** Indira Gandhi Delhi Technical University for Women (IGDTUW), Delhi  
+**Demo Video Link:** [YouTube Unlisted Link]  
+**Slide Deck Link (if hosted externally):** https://drive.google.com/file/d/1ObpvTI2Vs60QJ_lmg12Vi_rLN0fLrzUW/view?usp=sharing
 
-Beacon is an AI-powered financial risk intelligence platform built for the **S&P Global × CRISIL Campus Hackathon 2026**.
+## 1. Project Overview / Problem Statement & Approach
 
-🔗 **Live Demo:** https://beacon-financial-risk-engine.streamlit.app/
+Financial news and social media generate large volumes of unstructured information that can influence markets. Manually identifying important events and assessing their potential risk is slow and difficult to scale.
 
----
+**Beacon** converts financial text into structured signals: sentiment, event category, estimated impact score (1–10), and risk level (Low/Medium/High). FinBERT powers sentiment analysis, while TF-IDF + Logistic Regression classifies events. The signals feed two modules: a tactical stock rebalancer and a strategic portfolio stress tester.
 
-## 🚀 What Beacon Does
+## 2. Architecture & Tech Stack
 
-Beacon converts financial news and social-media text into structured risk signals:
-
-- **Sentiment:** Positive / Neutral / Negative
-- **Event Type:** Financial event category
-- **Impact Score:** 1–10
-- **Risk Level:** Low / Medium / High
-
-These signals power two portfolio intelligence modules:
-
-1. **Tactical Stock Rebalancer** — adjusts stock weights using sentiment.
-2. **Strategic Stress Tester** — evaluates portfolio impact of high-risk events.
-
----
-
-## 🏗️ Architecture
+**Data flow:**
 
 ```text
-Financial News / Tweets
-          ↓
-     Risk Engine
-          ↓
- ┌────────┼─────────┐
- ↓        ↓         ↓
-Sentiment Event   Impact
- ↓        ↓         ↓
- └────────┼─────────┘
-          ↓
-     Risk Level
-       /      \
-      ↓        ↓
- Module A    Module B
-Rebalancer  Stress Test
+Financial News + Stock Tweets
+              ↓
+           Risk Engine
+     ┌────────┼─────────┐
+     ↓        ↓         ↓
+  FinBERT  TF-IDF +   Impact
+ Sentiment  Logistic  Estimation
+             Regression
+     └────────┼─────────┘
+              ↓
+       Structured Risk Signal
+              ↓
+       ┌──────┴──────┐
+       ↓             ↓
+ Module A         Module B
+Rebalancing     Stress Testing
 ```
 
-## 🤖 AI / ML Models
+**Tech stack:** Python, Pandas, NumPy, Scikit-learn, Hugging Face Transformers, FinBERT, Streamlit, Plotly, Joblib, Git/GitHub.
 
-### 1. Sentiment Analysis — FinBERT
+## 3. Dataset Used
 
-**Model:** `ProsusAI/FinBERT`
+- Financial news: ~4,800 labeled articles.
+- Stock tweets: ~80,000 tweets across 25 stocks.
+- Stock prices: ~6,300 records.
+- Polygon news: ~5,500 financial news articles.
+- Module B uses a synthetic 100-asset portfolio.
 
-FinBERT is used for financial-domain sentiment classification.
+**Assumptions:** Event labels were created using domain-specific weak-labeling rules. Historical impact calibration uses absolute three-day stock movement. Since news and price datasets cover different periods, direct causal attribution is not claimed. Live impact scores are heuristic estimates, not outputs of a trained text-to-impact model.
 
-```text
-Positive / Negative / Neutral
-```
+## 4. Quickstart & Installation
 
-**Performance:**
-
-| Model | Accuracy | Macro F1 |
-|---|---:|---:|
-| TF-IDF + Logistic Regression | 76.14% | 0.72 |
-| **FinBERT** | **87.71%** | **0.87** |
-
-FinBERT was selected as the final sentiment engine.
-
----
-
-### 2. Event Classification
-
-Events are classified into:
-
-- Earnings / Financial Results
-- Macroeconomic
-- M&A / Acquisition
-- Geopolitical
-- Product / Technology
-- Other
-
-**Model:**
-
-```text
-TF-IDF + Logistic Regression
-```
-
-**Performance:**
-
-```text
-Accuracy : 72.34%
-Macro F1 : 0.72
-```
-
-FinBERT embeddings were also tested but achieved only **57.03% accuracy**, so the simpler TF-IDF model was retained.
-
----
-
-### 3. Impact Score
-
-Impact is represented on a **1–10 scale**.
-
-Historical calibration uses the absolute **3-day market movement**:
-
-| 3-Day Movement | Score |
-|---|---:|
-| ≤ 0.5% | 1 |
-| 0.5–1% | 2 |
-| 1–2% | 3 |
-| 2–3% | 4 |
-| 3–4% | 5 |
-| 4–5% | 6 |
-| 5–7% | 7 |
-| 7–10% | 8 |
-| 10–15% | 9 |
-| >15% | 10 |
-
-For live text, Beacon uses an **interpretable estimated impact score** based on sentiment, sentiment confidence, event category and event confidence.
-
----
-
-### 4. Risk Level
-
-```text
-Impact < 5   → LOW
-Impact 5–7   → MEDIUM
-Impact ≥ 8   → HIGH
-```
-
----
-
-## 📈 Module A — Tactical Stock Rebalancer
-
-Daily sentiment from approximately **80K stock tweets covering 25 stocks** is aggregated by stock and date.
-
-```text
-Tweets
-  ↓
-FinBERT Sentiment
-  ↓
-Daily Stock Sentiment
-  ↓
-Dynamic Portfolio Weights
-  ↓
-Performance Analysis
-```
-
-Positive sentiment increases allocation, while negative sentiment decreases allocation.
-
-### Backtest
-
-```text
-Equal Weight Strategy     : -25.86%
-Sentiment Strategy        : -19.10%
-Outperformance            : +6.76 percentage points
-```
-
----
-
-## 🏦 Module B — Strategic Portfolio Stress Test
-
-A synthetic wholesale banking portfolio containing:
-
-```text
-53 Loans
-34 Bonds
-13 Derivatives
-```
-
-was created with a total value of approximately **$5.48B**.
-
-### Example Trigger
-
-```text
-Event Type  = Geopolitical
-Impact Score > 7
-```
-
-### Stress Scenario
-
-```text
-Equity Shock        = -10%
-Interest Rate Shock = +2%
-```
-
-### Result
-
-```text
-Initial Portfolio   : $5,480.52M
-Stressed Portfolio  : $5,191.22M
-Portfolio Loss      : $289.30M
-Impact              : -5.28%
-```
-
----
-
-## 📊 Datasets
-
-Beacon uses public/synthetic datasets including:
-
-- **Financial News:** ~4,800 labeled articles
-- **Stock Tweets:** ~80,000 tweets across 25 stocks
-- **Stock Prices:** ~6,300 records
-- **Polygon News:** ~5,500 financial news articles
-
-The datasets provide financial text, sentiment information, stock/ticker information and historical market movements.
-
----
-
-## 💡 Key Benefits
-
-- ⚡ Converts large volumes of financial text into structured signals
-- 🤖 Uses a financial-domain NLP model for sentiment
-- 🏷️ Automatically identifies important financial events
-- ⚠️ Produces interpretable risk and impact signals
-- 📈 Connects sentiment with tactical portfolio allocation
-- 🏦 Connects major events with portfolio stress testing
-- 📊 Provides an interactive decision-support dashboard
-- 🔍 Uses transparent logic where reliable supervised labels were unavailable
-
----
-
-## 🧩 Challenges & Solutions
-
-### Dataset Time Mismatch
-
-News and stock-price datasets covered different periods, so direct event-to-market attribution was avoided.
-
-### Missing Event Labels
-
-Event categories were created using domain-specific weak-labeling rules.
-
-### Model Selection
-
-FinBERT performed best for sentiment, while TF-IDF + Logistic Regression performed better for event classification.
-
-### Target Leakage
-
-An initial impact model achieved unrealistically high performance because the target was derived from an input feature. The model was discarded and replaced with transparent impact calibration.
-
----
-
-## ⚠️ Limitations
-
-- Event labels use weak supervision rather than fully human-annotated data.
-- Live Impact Score is an **estimated heuristic**, not a directly trained market-impact model.
-- News and market datasets have different time ranges.
-- Module A is a simplified historical backtest.
-- Module B uses a synthetic portfolio and simplified stress assumptions.
-- Beacon is a prototype and **not financial or investment advice**.
-
----
-
-## 🛠️ Tech Stack
-
-```text
-Python
-Pandas / NumPy
-Scikit-learn
-Hugging Face Transformers
-FinBERT
-Streamlit
-Plotly
-Joblib
-Git / GitHub
-Streamlit Community Cloud
-```
-
----
-
-## 📁 Project Structure
-
-```text
-beacon-financial-risk-engine/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── models/
-│   ├── event_model.pkl
-│   └── event_vectorizer.pkl
-│
-├── data/
-│   └── stock_prices_clean.csv
-│
-└── outputs/
-    ├── risk_engine_predictions.csv
-    ├── module_a_rebalancing_weights.csv
-    ├── module_a_portfolio_performance.csv
-    ├── module_b_summary.csv
-    └── module_b_stress_test.csv
-```
-
----
-
-## ▶️ Run Locally
+**Runtime:** Python 3.11 recommended; tested locally on macOS. Deployed on Streamlit Community Cloud.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/beacon-financial-risk-engine.git
+git clone <your-repo-url>
 cd beacon-financial-risk-engine
 
 python -m venv venv
 source venv/bin/activate
 
 pip install -r requirements.txt
-
 streamlit run app.py
 ```
 
----
+On Windows, activate the environment with `venv\\Scripts\\activate`.
 
-## 🔮 Future Scope
+**Live demo:** https://beacon-financial-risk-engine.streamlit.app/
 
-- Real-time financial news and social-media APIs
-- Streaming risk detection
-- Fine-tuned event classification
-- Direct text-to-market-impact modeling
-- Real-time risk alerts
-- Sector/geographic risk propagation
-- Advanced portfolio optimization
-- SHAP-based explainability
-- Continuous model retraining
+## 5. Key Results & Domain Impact
 
----
+- **FinBERT sentiment:** 87.71% accuracy, 0.87 Macro F1.
+- **Event classification:** 72.34% accuracy, 0.72 Macro F1.
+- **Module A:** Sentiment strategy returned -19.10% versus -25.86% for equal weighting, a difference of +6.76 percentage points in the historical backtest.
+- **Module B:** Simulated portfolio value decreased from $5,480.52M to $5,191.22M under the example stress scenario, a loss of $289.30M (-5.28%).
 
-## 🏆 Key Results
+Beacon demonstrates how unstructured financial information can be transformed into structured risk signals and connected to portfolio analysis. It supports faster event exploration, sentiment-based allocation experiments and hypothetical stress testing.
 
-| Component | Result |
-|---|---:|
-| FinBERT Sentiment Accuracy | **87.71%** |
-| Event Classification Accuracy | **72.34%** |
-| Module A Outperformance | **+6.76 pp** |
-| Module B Stress Impact | **-5.28%** |
-
----
-
-## 👩‍💻 Built For
-
-**S&P Global × CRISIL Campus Hackathon 2026**
-
-> **Beacon — Turning financial information into actionable risk intelligence.**
-
+**Limitations:** Event labels use weak supervision; Module A is a simplified backtest; Module B uses a synthetic portfolio and simplified shocks. Beacon is a hackathon prototype, not financial advice.
